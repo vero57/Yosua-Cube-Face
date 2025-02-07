@@ -81,6 +81,22 @@
             mouse.y = (event.clientY / window.innerHeight) * 2 - 1;
         });
 
+        let touchStartX = 0;
+        let touchStartY = 0;
+
+        document.addEventListener('touchstart', (event) => {
+            touchStartX = event.touches[0].clientX;
+            touchStartY = event.touches[0].clientY;
+        });
+
+        document.addEventListener('touchmove', (event) => {
+            const touchX = event.touches[0].clientX;
+            const touchY = event.touches[0].clientY;
+
+            mouse.x = (touchX - touchStartX) / window.innerWidth * 2;
+            mouse.y = (touchY - touchStartY) / window.innerHeight * 2;
+        });
+
         function animate() {
             requestAnimationFrame(animate);
 
