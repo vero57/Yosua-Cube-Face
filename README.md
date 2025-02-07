@@ -20,3 +20,7 @@ Proyek ini adalah sebuah animasi 3D berbasis web yang menggunakan [Three.js](htt
 1. **Clone repositori ini**
 2. **Buka repositori ke VsCode/Code editor yang kamu punya**
 3. **Jalankan kodenya dengan live server atau cara apapun yang kamu mau**
+
+## 🌐 Contoh Web
+
+https://yosua-cube-face.vercel.app/
