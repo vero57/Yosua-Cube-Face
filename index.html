@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>YoCube</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <script>
+        const canvas = document.getElementById('glCanvas');
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setClearColor(0x000000);
+        document.body.appendChild(renderer.domElement);
+
+        const scene = new THREE.Scene();
+
+        const camera = new THREE.PerspectiveCamera(
+            100,
+            window.innerWidth / window.innerHeight,
+            0.1,
+            1000
+        );
+        camera.position.z = 5;
+
+        const textureLoader = new THREE.TextureLoader();
+        const frontTexture = textureLoader.load("yosua's-face.png");
+
+        function createTextTexture(text) {
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.width = 256;
+            canvas.height = 256;
+            context.fillStyle = 'white';
+            context.fillRect(0, 0, canvas.width, canvas.height);
+            context.fillStyle = 'black';
+            context.font = '48px Arial';
+            context.textAlign = 'center';
+            context.textBaseline = 'middle';
+            context.fillText(text, canvas.width / 2, canvas.height / 2);
+            return new THREE.CanvasTexture(canvas);
+        }
+
+        const rightTexture = createTextTexture('Sisi Kanan');
+        const leftTexture = createTextTexture('Sisi Kiri');
+        const topTexture = createTextTexture('Sisi Atas');
+        const bottomTexture = createTextTexture('Sisi Bawah');
+        const backTexture = createTextTexture('Belakang');
+
+        const geometry = new THREE.BoxGeometry(2, 2, 2);
+        const materials = [
+            new THREE.MeshBasicMaterial({ map: rightTexture }),
+            new THREE.MeshBasicMaterial({ map: leftTexture }),
+            new THREE.MeshBasicMaterial({ map: topTexture }),
+            new THREE.MeshBasicMaterial({ map: bottomTexture }),
+            new THREE.MeshBasicMaterial({ map: frontTexture }),
+            new THREE.MeshBasicMaterial({ map: backTexture })
+        ];
+        let cube = new THREE.Mesh(geometry, materials);
+
+        const wireframe = new THREE.WireframeGeometry(geometry);
+        const lineMaterial = new THREE.LineBasicMaterial({ color: 0x0000 });
+        const outline = new THREE.LineSegments(wireframe, lineMaterial);
+
+        scene.add(cube);
+
+        const mouse = {
+            x: 0,
+            y: 0
+        };
+
+        document.addEventListener('mousemove', (event) => {
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = (event.clientY / window.innerHeight) * 2 - 1;
+        });
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            cube.rotation.x = -mouse.y * Math.PI;
+            cube.rotation.y = mouse.x * Math.PI;
+            outline.rotation.x = -mouse.y * Math.PI;
+            outline.rotation.y = mouse.x * Math.PI;
+
+            renderer.render(scene, camera);
+        }
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        animate();
+    </script>
+</body>
+</html>
